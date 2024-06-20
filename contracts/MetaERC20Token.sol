@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
-import "../contracts/IMetaERC20Token.sol";
+import "./IMetaERC20Token.sol";
 
 contract MetaERC20Token is IMetaERC20Token {
-    address public owner;
+    address public immutable owner;
     string public tokenName;
     string public tokenSymbol;
     uint256 public totalSupply;
@@ -45,6 +45,8 @@ contract MetaERC20Token is IMetaERC20Token {
 
     function transfer(address _to, uint256 _value) external  returns (bool) {
         require(_to != address(0), "ZERO_ADDRESS_NOT_ALLOWED");
+        require(_to != msg.sender, "You cannot trasfer token to yourself");
+
         uint256 _bal = userBalances[msg.sender];
         require(_bal >= _value, "INSUFFICIENT_BALANCE");
 
